@@ -9,7 +9,11 @@ import java.util.Optional;
 
 public class MemberService {
 
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
+    private final MemberRepository memberRepository;
+
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository; //외부에서 넣어주도록
+    }
 
     /*
     * 회원 가입
@@ -36,7 +40,7 @@ public class MemberService {
     private void validateDuplicateMember(Member member) {
         memberRepository.findByName(member.getName())
                         .ifPresent(m -> {
-                            throw new IllegalArgumentException("이미 존재하는 회원입니다.");
+                            throw new IllegalStateException("이미 존재하는 회원입니다.");
                         });
         //어차피 optional로 저장되어도 ifPresent를 들어갈 것이기 때문에
         //저장하지 않고 바로 ifPresent로 넘겨버린다
